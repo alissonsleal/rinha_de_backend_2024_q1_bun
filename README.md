@@ -1,15 +1,24 @@
-# rinha_de_backend_2024_q1_bun
+<h1 align="center">Rinha de Backend - 2024 Q1</h1>
 
-To install dependencies:
+> **O repositório com o código-fonte está disponível [aqui](https://github.com/alissonsleal/rinha_de_backend_2024_q1_bun).**
 
-```bash
-bun install
+- [**bun**](https://bun.sh): Toolkit para Typescript
+- [**Drizzle**](https://orm.drizzle.team): ORM para TypeScript
+- [**Elysia**](https://elysiajs.com): Framework em Typescript para bun
+- [**PostgreSQL**](https://orm.drizzle.team/docs/get-started-postgresql): Banco de dados relacional
+
+![](https://i.imgur.com/bae6Dvu.png)
+
+## Instruções
+
+Só rodar o comando abaixo:
+
+```sh
+$ docker-compose up
 ```
 
-To run:
+## Autor
 
-```bash
-bun run src/index.ts
-```
-
-This project was created using `bun init` in bun v1.0.25. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+- Twitter: [@alissonsleal](https://twitter.com/alissonsleal)
+- Github: [@alissonsleal](https://github.com/alissonsleal)
+- LinkedIn: [Alisson Leal](https://www.linkedin.com/in/alissonsleal/)
