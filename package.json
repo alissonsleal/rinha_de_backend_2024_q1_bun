@@ -13,7 +13,6 @@
   "dependencies": {
     "drizzle-orm": "^0.29.3",
     "elysia": "^0.8.3",
-    "elysia-compression": "^0.0.7",
     "pg": "^8.11.3"
   },
   "devDependencies": {
