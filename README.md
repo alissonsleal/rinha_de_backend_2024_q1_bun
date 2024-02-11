@@ -6,6 +6,7 @@
 - [**Drizzle**](https://orm.drizzle.team): ORM para TypeScript
 - [**Elysia**](https://elysiajs.com): Framework em Typescript para bun
 - [**PostgreSQL**](https://orm.drizzle.team/docs/get-started-postgresql): Banco de dados relacional
+- [**nginx**](https://nginx.org): Servidor HTTP e proxy reverso
 
 ![](https://i.imgur.com/bae6Dvu.png)
 
