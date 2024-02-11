@@ -1,0 +1,27 @@
+{
+  "name": "rinha_de_backend_2024_q1_bun",
+  "module": "src/index.ts",
+  "type": "module",
+  "target": "bun",
+  "scripts": {
+    "start": "bun dist/index.js",
+    "dev": "bun --hot src/index.ts",
+    "build": "bun build ./src/index.ts --outdir ./dist --target=bun",
+    "db:introspect": "time drizzle-kit introspect:pg",
+    "db:seed": "time bun scripts/seed.ts"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.29.3",
+    "elysia": "^0.8.3",
+    "elysia-compression": "^0.0.7",
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.11.0",
+    "bun-types": "latest",
+    "drizzle-kit": "^0.20.13"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
