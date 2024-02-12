@@ -88,7 +88,7 @@ const app = new Elysia()
         return { error: 'Saldo insuficiente' }
       }
 
-      await Promise.all([
+      const [_, updated] = await Promise.all([
         db.insert(transactions).values({
           amount: valor,
           clientId: client[0].id,
@@ -97,13 +97,18 @@ const app = new Elysia()
         }),
         db
           .update(clients)
-          .set({ balance: newBalance })
-          .where(eq(clients.id, client[0].id)),
+          .set({
+            balance: sql`${clients.balance} ${
+              tipo === 'd' ? sql.raw('-') : sql.raw('+')
+            } ${Math.abs(valor)}`,
+          })
+          .where(eq(clients.id, client[0].id))
+          .returning(),
       ])
 
       return {
         limite: client[0].accountLimit,
-        saldo: newBalance,
+        saldo: updated[0].balance,
       }
     },
     {
