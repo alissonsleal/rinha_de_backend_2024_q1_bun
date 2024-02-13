@@ -9,7 +9,8 @@
     "build": "bun build ./src/index.ts --outdir ./dist --target=bun",
     "db:introspect": "time drizzle-kit introspect:pg",
     "db:seed": "time bun scripts/seed.ts",
-    "docker:push": "time bun scripts/push.ts"
+    "docker:push": "time bun scripts/push.ts",
+    "docker:start": "docker-compose up --build"
   },
   "dependencies": {
     "drizzle-orm": "^0.29.3",
