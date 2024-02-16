@@ -1,7 +1,7 @@
+import { desc, eq, sql } from 'drizzle-orm'
 import { Elysia, t } from 'elysia'
 import { db } from './db'
 import { clients, transactions } from './db/migrations/schema'
-import { desc, eq, sql } from 'drizzle-orm'
 
 const app = new Elysia()
   .onError(({ code, error, set }) => {
@@ -62,54 +62,57 @@ const app = new Elysia()
     async ({ params: { userId }, body, set }) => {
       const { valor, tipo, descricao } = body
 
-      const client = await db
-        .select({
-          id: clients.id,
-          balance: clients.balance,
-          accountLimit: clients.accountLimit,
-        })
-        .from(clients)
-        .where(eq(clients.id, userId))
-
-      if (!client.length) {
-        set.status = 404
-
-        return { error: 'Cliente não encontrado' }
-      }
-
-      const newBalance =
-        tipo === 'd'
-          ? client[0].balance - Math.abs(valor)
-          : client[0].balance + Math.abs(valor)
-
-      if (newBalance < client[0].accountLimit * -1) {
-        set.status = 422
-
-        return { error: 'Saldo insuficiente' }
-      }
-
-      const [_, updated] = await Promise.all([
-        db.insert(transactions).values({
-          amount: valor,
-          clientId: client[0].id,
-          description: descricao,
-          operation: tipo,
-        }),
-        db
-          .update(clients)
-          .set({
-            balance: sql`${clients.balance} ${
-              tipo === 'd' ? sql.raw('-') : sql.raw('+')
-            } ${Math.abs(valor)}`,
+      return await db.transaction(async (tx) => {
+        const client = await tx
+          .select({
+            id: clients.id,
+            balance: clients.balance,
+            accountLimit: clients.accountLimit,
           })
-          .where(eq(clients.id, client[0].id))
-          .returning(),
-      ])
+          .from(clients)
+          .where(eq(clients.id, userId))
+          .for('update')
 
-      return {
-        limite: client[0].accountLimit,
-        saldo: updated[0].balance,
-      }
+        if (!client.length) {
+          set.status = 404
+
+          return { error: 'Cliente não encontrado' }
+        }
+
+        const newBalance =
+          tipo === 'd'
+            ? client[0].balance - Math.abs(valor)
+            : client[0].balance + Math.abs(valor)
+
+        if (newBalance < client[0].accountLimit * -1) {
+          set.status = 422
+
+          return { error: 'Saldo insuficiente' }
+        }
+
+        const [_, updated] = await Promise.all([
+          tx.insert(transactions).values({
+            amount: valor,
+            clientId: client[0].id,
+            description: descricao,
+            operation: tipo,
+          }),
+          tx
+            .update(clients)
+            .set({
+              balance: sql`${clients.balance} ${
+                tipo === 'd' ? sql.raw('-') : sql.raw('+')
+              } ${Math.abs(valor)}`,
+            })
+            .where(eq(clients.id, client[0].id))
+            .returning(),
+        ])
+
+        return {
+          limite: client[0].accountLimit,
+          saldo: updated[0].balance,
+        }
+      })
     },
     {
       body: t.Object({
