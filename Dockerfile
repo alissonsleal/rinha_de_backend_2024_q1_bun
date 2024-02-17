@@ -32,7 +32,12 @@ COPY --from=prerelease /usr/src/app/dist/index.js .
 # set ulimit for file descriptors
 # RUN ulimit -n 65536
 
+# copy wait-for-it.sh to the /app directory and make it executable
+COPY wait-for-it.sh /usr/src/app
+RUN chmod +x /usr/src/app/wait-for-it.sh
+
 # run the app
 USER bun
 EXPOSE 3000
-ENTRYPOINT [ "bun", "run", "index.js" ]
+CMD ["./wait-for-it.sh", "db:5432", "--", "bun", "run", "index.js"]
+
