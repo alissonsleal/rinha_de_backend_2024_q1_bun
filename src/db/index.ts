@@ -6,4 +6,8 @@ const pool = new Pool({
   max: 30,
 })
 
+pool.on('error', (err) => {
+  console.error('Unexpected error on idle client', err)
+})
+
 export const db = drizzle(pool)
